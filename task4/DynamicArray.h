@@ -6,15 +6,14 @@
 class DynamicArray {
 private:
     int* data;
-    size_t capacity;
     size_t size;
 
-    void resize(size_t new_capacity);
+    void resize(size_t );
 
 public:
     // Конструкторы и деструктор
     DynamicArray();
-    explicit DynamicArray(size_t initial_capacity);
+    explicit DynamicArray(size_t );
     DynamicArray(const DynamicArray& other);
     DynamicArray(DynamicArray&& other) noexcept;
     DynamicArray(std::initializer_list<int> init_list);

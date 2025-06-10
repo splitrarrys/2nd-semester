@@ -3,25 +3,24 @@
 #include <algorithm>
 #include <sstream>
 
-DynamicArray::DynamicArray() : data(nullptr), capacity(0), size(0) {}
+DynamicArray::DynamicArray() : data(nullptr), size(0) {}
 
-DynamicArray::DynamicArray(size_t initial_capacity) : 
-    data(new int[initial_capacity]), capacity(initial_capacity), size(0) {}
+DynamicArray::DynamicArray(size_t) : 
+    data size(0) {}
 
 DynamicArray::DynamicArray(const DynamicArray& other) : 
-    data(new int[other.capacity]), capacity(other.capacity), size(other.size) {
+    data size(other.size) {
     std::copy(other.data, other.data + other.size, data);
 }
 
 DynamicArray::DynamicArray(DynamicArray&& other) noexcept : 
-    data(other.data), capacity(other.capacity), size(other.size) {
+    data(other.data), size(other.size) {
     other.data = nullptr;
-    other.capacity = 0;
     other.size = 0;
 }
 
 DynamicArray::DynamicArray(std::initializer_list<int> init_list) : 
-    data(new int[init_list.size()]), capacity(init_list.size()), size(init_list.size()) {
+    data(new int[init_list.size()]),  size(init_list.size()) {
     std::copy(init_list.begin(), init_list.end(), data);
 }
 
@@ -29,8 +28,7 @@ DynamicArray::~DynamicArray() {
     delete[] data;
 }
 
-void DynamicArray::resize(size_t new_capacity) {
-    int* new_data = new int[new_capacity];
+void DynamicArray::resize(size_t ) {
     std::copy(data, data + size, new_data);
     delete[] data;
     data = new_data;
@@ -40,8 +38,6 @@ void DynamicArray::resize(size_t new_capacity) {
 DynamicArray& DynamicArray::operator=(const DynamicArray& other) {
     if (this != &other) {
         delete[] data;
-        data = new int[other.capacity];
-        capacity = other.capacity;
         size = other.size;
         std::copy(other.data, other.data + size, data);
     }
@@ -52,10 +48,8 @@ DynamicArray& DynamicArray::operator=(DynamicArray&& other) noexcept {
     if (this != &other) {
         delete[] data;
         data = other.data;
-        capacity = other.capacity;
         size = other.size;
         other.data = nullptr;
-        other.capacity = 0;
         other.size = 0;
     }
     return *this;
@@ -77,13 +71,6 @@ DynamicArray DynamicArray::operator>>(int shift) const {
         std::rotate(result.data, result.data + (size - shift), result.data + size);
     }
     return result;
-}
-
-void DynamicArray::push_back(int value) {
-    if (size >= capacity) {
-        resize(capacity == 0 ? 1 : capacity * 2);
-    }
-    data[size++] = value;
 }
 
 int DynamicArray::at(size_t index) const {
