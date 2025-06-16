@@ -3,6 +3,8 @@
 #include "Point.h"
 #include <iostream>
 
+const Point& getStart() const { return start; }
+const Point& getEnd() const { return end; }
 class Segment {
 private:
     Point start;
