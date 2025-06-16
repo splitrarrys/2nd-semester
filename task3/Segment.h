@@ -1,26 +1,29 @@
-#pragma once
+#ifndef SEGMENT_H
+#define SEGMENT_H
 
 #include "Point.h"
+#include <stdexcept>
 #include <iostream>
 
-const Point& getStart() const { return start; }
-const Point& getEnd() const { return end; }
 class Segment {
 private:
     Point start;
     Point end;
 
+    void validateSegment() const;
+
 public:
     Segment(const Point& start, const Point& end);
     
-    // Метод расчета ординаты по абсциссе
     double getY(double x) const;
-    
-    // Оператор сдвига влево
     Segment operator<<(double shift) const;
     
-    // Статический метод чтения отрезка
     static Segment readFromStream(std::istream& is);
+    
+    const Point& getStart() const { return start; }
+    const Point& getEnd() const { return end; }
     
     friend std::ostream& operator<<(std::ostream& os, const Segment& s);
 };
+
+#endif // SEGMENT_H
