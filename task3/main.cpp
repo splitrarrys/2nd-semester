@@ -1,76 +1,40 @@
 #include <iostream>
-#include <vector>
-#include "Point.h"
-#include "Segment.h"
-#include "PiecewiseLinearApproximation.h"
+#include "LinearInterpolation.h"
 
-void demonstrate_segment() {
-    std::cout << "=== Segment Demonstration ===\n";
+void demonstrateAbstractClass() {
+    // Создаем через указатель на базовый класс
+    std::unique_ptr<PiecewiseLinearFunction> func = 
+        std::make_unique<LinearInterpolation>(std::vector<Point>{{0,0}, {1,1}, {2,0}});
     
-    // Создание отрезка
-    Segment seg(Point(1.0, 1.0), Point(3.0, 3.0));
-    std::cout << "Created segment: " << seg << std::endl;
+    std::cout << "Using abstract interface:\n";
+    std::cout << func->toString() << "\n";
+    std::cout << "f(0.5) = " << func->getY(0.5) << "\n";
     
-    // Линейная интерполяция
-    std::cout << "Y at x=2.0: " << seg.getY(2.0) << std::endl;
-    
-    // Сдвиг отрезка
-    Segment shifted = seg << 1.0;
-    std::cout << "Shifted segment (<<1.0): " << shifted << std::endl;
-    
-    // Чтение отрезка из потока
-    std::istringstream input("0.0 0.0 2.0 2.0");
-    Segment from_stream = Segment::readFromStream(input);
-    std::cout << "Segment from stream: " << from_stream << std::endl;
+    func->addPoint({1.5, 0.5});
+    std::cout << "After adding point: " << func->toString() << "\n";
 }
 
-void demonstrate_piecewise_linear() {
-    std::cout << "\n=== Piecewise Linear Approximation Demonstration ===\n";
+void demonstrateDerivedClass() {
+    LinearInterpolation func{{0,0}, {1,2}, {2,1}};
     
-    // Создание аппроксимации разными способами
-    PiecewiseLinearApproximation approx1({
-        {0.0, 0.0},
-        {1.0, 1.0},
-        {2.0, 0.0}
-    });
+    std::cout << "\nUsing derived class directly:\n";
+    std::cout << func.toString() << "\n";
     
-    std::vector<Point> points = {{0.0, 1.0}, {1.0, 2.0}, {2.0, 1.0}};
-    PiecewiseLinearApproximation approx2(points);
+    auto shifted = func << 1.0;
+    std::cout << "Shifted function: " << shifted.toString() << "\n";
     
-    std::cout << "Approximation 1 points:\n";
-    for (const auto& p : approx1.getPoints()) {
-        std::cout << p << std::endl;
-    }
-    
-    // Добавление точки
-    approx1.addPoint({1.5, 1.5});
-    std::cout << "\nAfter adding point (1.5, 1.5):\n";
-    for (const auto& p : approx1.getPoints()) {
-        std::cout << p << std::endl;
-    }
-    
-    // Получение значений
-    std::cout << "\nInterpolated values:\n";
-    std::cout << "Y at x=0.5: " << approx1.getY(0.5) << std::endl;
-    std::cout << "Y at x=1.25: " << approx1.getY(1.25) << std::endl;
-    
-    // Чтение точек из потока
-    std::istringstream points_input("0.0 0.0\n1.0 1.0\n2.0 0.0");
-    auto read_points = PiecewiseLinearApproximation::readPointsFromStream(points_input);
-    std::cout << "\nPoints read from stream:\n";
-    for (const auto& p : read_points) {
-        std::cout << p << std::endl;
-    }
+    std::istringstream input("0 0\n1 1\n2 0");
+    auto fromStream = LinearInterpolation::readFromStream(input);
+    std::cout << "From stream: " << fromStream.toString() << "\n";
 }
 
 int main() {
     try {
-        demonstrate_segment();
-        demonstrate_piecewise_linear();
+        demonstrateAbstractClass();
+        demonstrateDerivedClass();
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
-    
     return 0;
 }
